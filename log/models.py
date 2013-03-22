@@ -6,10 +6,11 @@ from django.middleware.common import _is_ignorable_404
 
 
 class RequestLogManager(models.Manager):
-    def create_log(self, request):
+    def create_log(self, request, url=None):
         if request.user and request.session:
             stamp = datetime.datetime.now()
-            url = request.get_full_path()
+            if url is None:
+                url = request.get_full_path()
             if _is_ignorable_404(url):
                 return None
             # Truncate in case it doesn't fit
